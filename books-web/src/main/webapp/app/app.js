@@ -78,6 +78,15 @@ var App = angular.module('books',
       }
     }
   })
+    .state('register', {
+    url: '/register',
+    views: {
+      'page': {
+        templateUrl: 'partial/register.html',
+        controller: 'Register'
+      }
+    }
+  })
   .state('tag', {
     url: '/tag',
     views: {

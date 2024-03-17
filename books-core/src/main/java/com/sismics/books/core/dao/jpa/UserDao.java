@@ -26,14 +26,14 @@ public class UserDao {
     /**
      * Authenticates an user.
      * 
-     * @param username User login
+     * @param email User login
      * @param password User password
      * @return ID of the authenticated user or null
      */
-    public String authenticate(String username, String password) {
+    public String authenticate(String email, String password) {
         EntityManager em = ThreadLocalContext.get().getEntityManager();
-        Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
-        q.setParameter("username", username);
+        Query q = em.createQuery("select u from User u where u.email = :email and u.deleteDate is null");
+        q.setParameter("email", email);
         try {
             User user = (User) q.getSingleResult();
             if (!BCrypt.checkpw(password, user.getPassword())) {
@@ -58,11 +58,11 @@ public class UserDao {
         
         // Checks for user unicity
         EntityManager em = ThreadLocalContext.get().getEntityManager();
-        Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
-        q.setParameter("username", user.getUsername());
+        Query q = em.createQuery("select u from User u where u.email = :email and u.deleteDate is null");
+        q.setParameter("email", user.getEmail());
         List<?> l = q.getResultList();
         if (l.size() > 0) {
-            throw new Exception("AlreadyExistingUsername");
+            throw new Exception("AlreadyExistingEmail");
         }
         
         user.setCreateDate(new Date());
@@ -137,11 +137,11 @@ public class UserDao {
      * @param username User's username
      * @return User
      */
-    public User getActiveByUsername(String username) {
+    public User getActiveByEmail(String email) {
         EntityManager em = ThreadLocalContext.get().getEntityManager();
         try {
-            Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
-            q.setParameter("username", username);
+            Query q = em.createQuery("select u from User u where u.email = :email and u.deleteDate is null");
+            q.setParameter("email", email);
             return (User) q.getSingleResult();
         } catch (NoResultException e) {
             return null;
@@ -168,14 +168,14 @@ public class UserDao {
     /**
      * Deletes a user.
      * 
-     * @param username User's username
+     * @param email User's email
      */
-    public void delete(String username) {
+    public void delete(String email) {
         EntityManager em = ThreadLocalContext.get().getEntityManager();
             
         // Get the user
-        Query q = em.createQuery("select u from User u where u.username = :username and u.deleteDate is null");
-        q.setParameter("username", username);
+        Query q = em.createQuery("select u from User u where u.email = :email and u.deleteDate is null");
+        q.setParameter("email", email);
         User userFromDb = (User) q.getSingleResult();
         
         // Delete the user

@@ -15,7 +15,8 @@ App.controller('SettingsUserEdit', function($scope, $state, $stateParams, Restan
    * In edit mode, load the current user.
    */
   if ($scope.isEdit()) {
-    Restangular.one('user', $stateParams.username).get().then(function(data) {
+      Restangular.one('user', $stateParams.username).get().then(function (data) {
+        // console.log(data)
       $scope.user = data;
     });
   }

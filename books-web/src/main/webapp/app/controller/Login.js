@@ -3,7 +3,7 @@
 /**
  * Login controller.
  */
-App.controller('Login', function($scope, $rootScope, $state, User) {
+App.controller('Login', function ($scope, $rootScope, $state, User) {
   $scope.login = function() {
     User.login($scope.user).then(function() {
       $rootScope.userInfo = User.userInfo(true);
@@ -12,4 +12,8 @@ App.controller('Login', function($scope, $rootScope, $state, User) {
       alert('Username or password invalid');
     });
   };
+    
+    $scope.goToRegister = function () {
+      $state.transitionTo('register'); 
+    }
 });

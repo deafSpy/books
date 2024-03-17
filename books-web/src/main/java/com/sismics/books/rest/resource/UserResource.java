@@ -63,15 +63,9 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(
         @FormParam("username") String username,
-        @FormParam("password") String password,
-        @FormParam("locale") String localeId,
-        @FormParam("email") String email) throws JSONException {
+        @FormParam("email") String email,
+        @FormParam("password") String password) throws JSONException {
 
-        if (!authenticate()) {
-            throw new ForbiddenClientException();
-        }
-        checkBaseFunction(BaseFunction.ADMIN);
-        
         // Validate the input data
         username = ValidationUtil.validateLength(username, "username", 3, 50);
         ValidationUtil.validateAlphanumeric(username, "username");
@@ -138,7 +132,7 @@ public class UserResource extends BaseResource {
         
         // Update the user
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByUsername(principal.getName());
+        User user = userDao.getActiveByEmail(principal.getEmail());
         if (email != null) {
             user.setEmail(email);
         }
@@ -199,7 +193,7 @@ public class UserResource extends BaseResource {
         
         // Check if the user exists
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByUsername(username);
+        User user = userDao.getActiveByEmail(email);
         if (user == null) {
             throw new ClientException("UserNotFound", "The user doesn't exist");
         }
@@ -238,16 +232,16 @@ public class UserResource extends BaseResource {
     @GET
     @Path("check_username")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response checkUsername(
+    public Response checkEmail(
         @QueryParam("username") String username) throws JSONException {
         
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByUsername(username);
+        User user = userDao.getActiveByEmail(principal.getEmail());
         
         JSONObject response = new JSONObject();
         if (user != null) {
             response.put("status", "ko");
-            response.put("message", "Username already registered");
+            response.put("message", "Email already registered");
         } else {
             response.put("status", "ok");
         }
@@ -259,7 +253,7 @@ public class UserResource extends BaseResource {
      * This resource is used to authenticate the user and create a user ession.
      * The "session" is only used to identify the user, no other data is stored in the session.
      * 
-     * @param username Username
+     * @param email Email
      * @param password Password
      * @param longLasted Remember the user next time, create a long lasted session.
      * @return Response
@@ -268,17 +262,17 @@ public class UserResource extends BaseResource {
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(
-        @FormParam("username") String username,
+        @FormParam("email") String email,
         @FormParam("password") String password,
         @FormParam("remember") boolean longLasted) throws JSONException {
         
         // Validate the input data
-        username = StringUtils.strip(username);
+        email = StringUtils.strip(email);
         password = StringUtils.strip(password);
 
         // Get the user
         UserDao userDao = new UserDao();
-        String userId = userDao.authenticate(username, password);
+        String userId = userDao.authenticate(email, password);
         if (userId == null) {
             throw new ForbiddenClientException();
         }
@@ -365,7 +359,7 @@ public class UserResource extends BaseResource {
         
         // Delete the user
         UserDao userDao = new UserDao();
-        userDao.delete(principal.getName());
+        userDao.delete(principal.getEmail());
         
         // Always return ok
         JSONObject response = new JSONObject();
@@ -391,7 +385,7 @@ public class UserResource extends BaseResource {
         
         // Check if the user exists
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByUsername(username);
+        User user = userDao.getActiveByEmail(username);
         if (user == null) {
             throw new ClientException("UserNotFound", "The user doesn't exist");
         }
@@ -404,7 +398,7 @@ public class UserResource extends BaseResource {
         }
         
         // Delete the user
-        userDao.delete(user.getUsername());
+        userDao.delete(user.getEmail());
         
         // Always return ok
         JSONObject response = new JSONObject();
@@ -467,7 +461,7 @@ public class UserResource extends BaseResource {
         JSONObject response = new JSONObject();
         
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByUsername(username);
+        User user = userDao.getActiveByEmail(username);
         if (user == null) {
             throw new ClientException("UserNotFound", "The user doesn't exist");
         }

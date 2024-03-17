@@ -16,12 +16,20 @@ App.factory('User', function(Restangular) {
         userInfo = Restangular.one('user').get();
       }
       return userInfo;
-    },
+      },
+      
     
+    /**
+     * Registers an user.
+     */
+    //   register: function (user) {
+    //   return Restangular.one('user').post('register', user);
+    //   },
+      
     /**
      * Login an user.
      */
-    login: function(user) {
+      login: function (user) {
       return Restangular.one('user').post('login', user);
     },
     
