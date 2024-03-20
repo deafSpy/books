@@ -104,7 +104,7 @@ public class UserResource extends BaseResource {
      * Updates user informations.
      * 
      * @param password Password
-     * @param email E-Mail
+     * @param username Username
      * @param themeId Theme
      * @param localeId Locale ID
      * @param firstConnection True if the user hasn't acknowledged the first connection wizard yet.
@@ -115,7 +115,7 @@ public class UserResource extends BaseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response update(
         @FormParam("password") String password,
-        @FormParam("email") String email,
+        @FormParam("username") String email,
         @FormParam("theme") String themeId,
         @FormParam("locale") String localeId,
         @FormParam("first_connection") Boolean firstConnection) throws JSONException {
@@ -132,7 +132,7 @@ public class UserResource extends BaseResource {
         
         // Update the user
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByEmail(principal.getEmail());
+        User user = userDao.getActiveByEmail(email);
         if (email != null) {
             user.setEmail(email);
         }
@@ -445,14 +445,14 @@ public class UserResource extends BaseResource {
     /**
      * Returns the information about a user.
      * 
-     * @param username Username
+     * @param email Email
      * @return Response
      * @throws JSONException
      */
     @GET
-    @Path("{username: [a-zA-Z0-9_]+}")
+    @Path("{email: [a-zA-Z0-9_]+}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response view(@PathParam("username") String username) throws JSONException {
+    public Response view(@PathParam("email") String email) throws JSONException {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
@@ -461,7 +461,7 @@ public class UserResource extends BaseResource {
         JSONObject response = new JSONObject();
         
         UserDao userDao = new UserDao();
-        User user = userDao.getActiveByEmail(username);
+        User user = userDao.getActiveByEmail(email);
         if (user == null) {
             throw new ClientException("UserNotFound", "The user doesn't exist");
         }

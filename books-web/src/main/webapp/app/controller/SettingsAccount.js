@@ -19,7 +19,10 @@ App.controller('SettingsAccount', function($scope, Restangular) {
   /**
    * Edit user.
    */
-  $scope.editUser = function() {
+    $scope.editUser = function () {
+      
+        console.log($scope.user)
+
     Restangular.one('user').post('', $scope.user).then(function() {
       $scope.user = {};
       $scope.alerts.push({ type: 'success', msg: 'Account successfully updated' });

@@ -10,8 +10,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in users | orderBy: 'username'" ng-click="editUser(user)">
-          <td>{{ user.username }}</td>
+        <tr ng-repeat="user in users | orderBy: 'email'" ng-click="editUser(user)">
+          <td>{{ user.email }}</td>
           <td>{{ user.create_date | date: 'yyyy-MM-dd' }}</td>
         </tr>
       </tbody>

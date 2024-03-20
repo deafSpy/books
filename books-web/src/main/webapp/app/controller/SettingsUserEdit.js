@@ -7,7 +7,8 @@ App.controller('SettingsUserEdit', function($scope, $state, $stateParams, Restan
   /**
    * Returns true if in edit mode (false in add mode).
    */
-  $scope.isEdit = function() {
+    $scope.isEdit = function () {
+      console.log($stateParams)
     return $stateParams.username;
   };
   

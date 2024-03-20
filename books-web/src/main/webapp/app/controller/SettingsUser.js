@@ -19,6 +19,6 @@ App.controller('SettingsUser', function($scope, $state, Restangular) {
    * Edit a user.
    */
   $scope.editUser = function(user) {
-    $state.transitionTo('settings.user.edit', { username: user.username });
+    $state.transitionTo('settings.user.edit', { username: user.email });
   };
 });
